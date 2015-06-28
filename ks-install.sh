@@ -5,6 +5,7 @@ sudo apt-get update
 sudo apt-get upgrade
 
 export KS_INST_DIR=~/ks_inst
+export KS_INST_SOURCE_DIR=~/ks-installation
 
 if [ ! -d "$KS_INST_DIR" ]; then
    sudo mkdir $KS_INST_DIR
@@ -50,11 +51,6 @@ read -p "Microwise: Installed jdk." var
 sudo apt-get install maven
 read -p "Microwise: Installed maven." var
 
-cd ~
-git clone https://github.com/Seagate/kinetic-java.git
-cd kinetic-java
-mvn clean package
-read -p "Installed kinetic-java." var
 
 
 #Downloading kinetic-swift source
@@ -63,9 +59,18 @@ git clone https://github.com/swiftstack/kinetic-swift.git
 export KS_SOURCE_DIR=~/kinetic-swift
 cd $KS_SOURCE_DIR
 git submodule update --init
-read -p "Downloaded kinetic-swift source." var
+read -p "Microwise: Downloaded kinetic-swift source." var
+cd kinetic-java
+mvn clean package
+read -p "Microwise: Installed kinetic-java." var
+
+cd bin
+screen -dmS kj ./startSimulator.sh
+read -p "Microwise: a simulator is launched." var
+
 
 #Installing from source
+cd ~
 sudo python setup.py develop
 cd swift
 sudo python setup.py develop
@@ -77,7 +82,7 @@ git submodule update
 sudo sh compile_proto.sh 
 sudo python setup.py develop
 cd ..
-read -p "Installing from source." var
+read -p "Microwise: Installing from source." var
 
 
 #make the DIRs
@@ -107,13 +112,64 @@ if [ ! -d "/var/cache/swift" ]; then
    sudo mkdir /var/cache/swift
 fi
 sudo chmod 777 /var/cache/swift
+read -p "Microwise: Maked the DIRs." var
 
 
-#generating the .conf files
+#copy the .conf samples
 sudo cp $KS_SOURCE_DIR/swift/etc/account-server.conf-sample /etc/swift/account-server.conf
 sudo cp $KS_SOURCE_DIR/swift/etc/object-server.conf-sample /etc/swift/object-server.conf
 sudo cp $KS_SOURCE_DIR/swift/etc/container-server.conf-sample /etc/swift/container-server.conf
 sudo cp $KS_SOURCE_DIR/swift/etc/proxy-server.conf-sample /etc/swift/proxy-server.conf
 sudo cp $KS_SOURCE_DIR/swift/etc/swift.conf-sample /etc/swift/swift.conf
-read -p "Preparing the .conf files." var
+read -p "Microwise: copied the .conf files." var
+
+
+#modify the .conf files
+source $KS_INST_SOURCE_DIR/tools/ini-config
+iniset /etc/swift/account-server.conf DEFAULT user stack
+iniset /etc/swift/account-server.conf DEFAULT devices "$SWIFT_DIR"
+iniset /etc/swift/account-server.conf DEFAULT mount_check false
+iniset /etc/swift/account-server.conf DEFAULT pipeline "healthcheck account-server"
+
+iniset /etc/swift/container-server.conf DEFAULT user stack
+iniset /etc/swift/container-server.conf DEFAULT devices "$SWIFT_DIR"
+iniset /etc/swift/contaienr-server.conf DEFAULT mount_check false
+iniset /etc/swift/container-server.conf DEFAULT pipeline "healthcheck container-server"
+
+iniset /etc/swift/object-server.conf DEFAULT user stack
+iniset /etc/swift/object-server.conf DEFAULT devices "$SWIFT_DIR"
+iniset /etc/swift/object-server.conf DEFAULT mount_check false
+iniset /etc/swift/object-server.conf DEFAULT pipeline "healthcheck object-server"
+iniset /etc/swift/object-server.conf DEFAULT disk_chunk_size 1048576
+iniset /etc/swift/object-server.conf app:object-server use egg:kinetic_swift#object
+
+iniset /etc/swift/proxy-server.conf DEFAULT user stack
+iniset /etc/swift/proxy-server.conf DEFAULT object_single_process object-server.conf
+iniset /etc/swift/proxy-server.conf DEFAULT account_autocreate true
+
+read -p "Microwise: modified the .conf files." var
+
+
+#build the ring
+swift-ring-builder account.builder create 10 1 1
+swift-ring-builder account.builder add --region 1 --zone 1 --ip 127.0.0.1 --port 6002 --device sdv --weight 1
+swift-ring-builder account.builder rebalance
+
+swift-ring-builder container.builder create 10 1 1
+swift-ring-builder container.builder add --region 1 --zone 1 --ip 127.0.0.1 --port 6001 --device sdv --weight 1
+swift-ring-builder container.builder rebalance
+
+swift-ring-builder object.builder create 10 1 1
+swift-ring-builder object.builder add --region 1 --zone 1 --ip 127.0.0.1 --port 6000 --device 127.0.0.1:8123 --weight 1
+swift-ring-builder object.builder rebalance
+
+read -p "Microwise: builded the ring." var
+
+
+
+#start swift
+sudo swift-init start main
+sudo swift-init account-auditor account-replicator container-auditor container-updater container-replicator start
+screen -dmS ksr kinetic-swift-replicator /etc/swift/object-server.conf
+
 
