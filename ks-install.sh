@@ -29,10 +29,10 @@ sudo python get-pip.py
 
 read -p "Microwise: ez_setup and get-pip." var
 
-sudo apt-get install python-dev
-sudo apt-get install libffi-dev
-sudo apt-get install protobuf-compiler
-sudo apt-get install memcached
+sudo apt-get install -y python-dev
+sudo apt-get install -y libffi-dev
+sudo apt-get install -y protobuf-compiler
+sudo apt-get install -y memcached
 sudo pip install pyeclib
 
 read -p "Microwise: Prerequisites." var
@@ -65,12 +65,12 @@ mvn clean package
 read -p "Microwise: Installed kinetic-java." var
 
 cd bin
-screen -dmS kj ./startSimulator.sh
+screen -dmS kinjava ./startSimulator.sh
 read -p "Microwise: a simulator is launched." var
 
 
 #Installing from source
-cd ~
+cd ~/kinetic-swift
 sudo python setup.py develop
 cd swift
 sudo python setup.py develop
@@ -170,6 +170,6 @@ read -p "Microwise: builded the ring." var
 #start swift
 sudo swift-init start main
 sudo swift-init account-auditor account-replicator container-auditor container-updater container-replicator start
-screen -dmS ksr kinetic-swift-replicator /etc/swift/object-server.conf
+screen -dmS ksreplicator kinetic-swift-replicator /etc/swift/object-server.conf
 
 
