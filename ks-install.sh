@@ -48,6 +48,10 @@ cd liberasurecode
 make
 sudo make test
 sudo make install
+cd ~
+git clone https://bitbucket.org/kmgreen2/pyeclib.git
+cd pyeclib
+sudo python setup.py install
 read -p "Microwise: PyEClib installed." var
 
 
