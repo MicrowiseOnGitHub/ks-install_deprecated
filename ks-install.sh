@@ -30,12 +30,25 @@ sudo python get-pip.py
 read -p "Microwise: ez_setup and get-pip." var
 
 sudo apt-get install -y python-dev
+sudo apt-get install -y build-essential   #尽管上一步会安装gcc等安装包，但是还是需要安装build-essentials比较好
 sudo apt-get install -y libffi-dev
 sudo apt-get install -y protobuf-compiler
 sudo apt-get install -y memcached
-sudo pip install pyeclib
 
 read -p "Microwise: Prerequisites." var
+
+
+#Install PyEClib
+sudo apt-get install -y autoconf automake libtool
+cd ~
+git clone https://bitbucket.org/tsg-/liberasurecode.git
+cd liberasurecode
+./autogen.sh
+./configure
+make
+sudo make test
+sudo make install
+read -p "Microwise: PyEClib installed." var
 
 
 
@@ -48,7 +61,7 @@ export JAVA_HOME=~/jdk1.8.0_45
 read -p "Microwise: Installed jdk." var
 
 
-sudo apt-get install maven
+sudo apt-get install -y maven
 read -p "Microwise: Installed maven." var
 
 
@@ -73,6 +86,7 @@ read -p "Microwise: a simulator is launched." var
 cd ~/kinetic-swift
 sudo python setup.py develop
 cd swift
+git checkout stable/kilo
 sudo python setup.py develop
 cd ../python-swiftclient/
 sudo python setup.py install
