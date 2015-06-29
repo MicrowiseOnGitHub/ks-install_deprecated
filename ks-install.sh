@@ -143,18 +143,18 @@ source $KS_INST_SOURCE_DIR/tools/ini-config
 iniset /etc/swift/account-server.conf DEFAULT user stack
 iniset /etc/swift/account-server.conf DEFAULT devices "$SWIFT_DIR"
 iniset /etc/swift/account-server.conf DEFAULT mount_check false
-iniset /etc/swift/account-server.conf DEFAULT pipeline "healthcheck account-server"
+iniset /etc/swift/account-server.conf pipeline:main pipeline "healthcheck account-server"
 
 iniset /etc/swift/container-server.conf DEFAULT user stack
 iniset /etc/swift/container-server.conf DEFAULT devices "$SWIFT_DIR"
 iniset /etc/swift/contaienr-server.conf DEFAULT mount_check false
-iniset /etc/swift/container-server.conf DEFAULT pipeline "healthcheck container-server"
+iniset /etc/swift/container-server.conf pipeline:main pipeline "healthcheck container-server"
 
 iniset /etc/swift/object-server.conf DEFAULT user stack
 iniset /etc/swift/object-server.conf DEFAULT devices "$SWIFT_DIR"
 iniset /etc/swift/object-server.conf DEFAULT mount_check false
-iniset /etc/swift/object-server.conf DEFAULT pipeline "healthcheck object-server"
 iniset /etc/swift/object-server.conf DEFAULT disk_chunk_size 1048576
+iniset /etc/swift/object-server.conf pipeline:main pipeline "healthcheck object-server"
 iniset /etc/swift/object-server.conf app:object-server use egg:kinetic_swift#object
 
 iniset /etc/swift/proxy-server.conf DEFAULT user stack
