@@ -165,6 +165,7 @@ read -p "Microwise: modified the .conf files." var
 
 
 #build the ring
+cd /etc/swift
 swift-ring-builder account.builder create 10 1 1
 swift-ring-builder account.builder add --region 1 --zone 1 --ip 127.0.0.1 --port 6002 --device sdv --weight 1
 swift-ring-builder account.builder rebalance
