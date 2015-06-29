@@ -42,7 +42,7 @@ read -p "Microwise: Prerequisites." var
 #Install kinetic-java source
 #KS(kinetic-swift) need kinetic-java to communicate with kinetic devices 
 cd ~
-wget http://219.239.26.14/files/4032000006347FDB/download.oracle.com/otn-pub/java/jdk/8u45-b14/jdk-8u45-linux-x64.tar.gz
+wget --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u45-b14/jdk-8u45-linux-x64.tar.gz
 tar -xf jdk-8u45-linux-x64.tar.gz
 export JAVA_HOME=~/jdk1.8.0_45
 read -p "Microwise: Installed jdk." var
