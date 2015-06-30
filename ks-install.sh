@@ -81,8 +81,8 @@ mv gmock-1.7.0 gmock
 ./autogen.sh
 ./configure
 make
-make check
-make install
+sudo make check
+sudo make install
 read -p "Microwise: Installed protobuf 3.0." var
 
 #Install kinetic-java source
