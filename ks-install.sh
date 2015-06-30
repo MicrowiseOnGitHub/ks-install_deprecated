@@ -1,8 +1,6 @@
 #!/usr/bin/env bash 
 set -x #Pring every line of commands out
 
-sudo apt-get update
-sudo apt-get upgrade
 
 export KS_INST_DIR=~/ks_inst
 export KS_INST_SOURCE_DIR=~/ks-installation
@@ -18,6 +16,18 @@ fi
 sudo chown stack $KS_INST_DIR
 # Set fd 1 and 2 to write the log file
 exec 1> >( tools/outfilter.py -v -o "$KS_INST_DIR/ks-inst.log" ) 2>&1
+
+#Downloading kinetic-swift source
+cd ~
+git clone https://github.com/swiftstack/kinetic-swift.git
+export KS_SOURCE_DIR=~/kinetic-swift
+cd $KS_SOURCE_DIR
+git submodule update --init
+read -p "Microwise: Downloaded kinetic-swift source." var
+
+sudo apt-get update
+sudo apt-get upgrade
+
 
 cd $KS_INST_DIR
 
@@ -70,13 +80,7 @@ read -p "Microwise: Installed maven." var
 
 
 
-#Downloading kinetic-swift source
-cd ~
-git clone https://github.com/swiftstack/kinetic-swift.git
-export KS_SOURCE_DIR=~/kinetic-swift
 cd $KS_SOURCE_DIR
-git submodule update --init
-read -p "Microwise: Downloaded kinetic-swift source." var
 cd kinetic-java
 mvn clean package
 read -p "Microwise: Installed kinetic-java." var
