@@ -96,8 +96,9 @@ sudo python setup.py develop
 cd swift
 git checkout stable/kilo
 sudo python setup.py develop
-cd ../python-swiftclient/
-sudo python setup.py install
+#cd ../python-swiftclient/
+#sudo python setup.py install
+sudo apt-get install python-swiftclient
 cd ../kinetic-py/
 git submodule init
 git submodule update
