@@ -33,9 +33,13 @@ sudo apt-get install ntp
 cd $KS_INST_DIR
 
 #Prerequisites
-wget https://bootstrap.pypa.io/ez_setup.py
+if [ ! -f "ez_setup.py" ]; then
+    wget https://bootstrap.pypa.io/ez_setup.py
+fi
 sudo python ez_setup.py
-wget https://bootstrap.pypa.io/get-pip.py
+if [ ! -f "get-pip.py" ]; then
+    wget https://bootstrap.pypa.io/get-pip.py
+fi
 sudo python get-pip.py
 
 read -p "Microwise: ez_setup and get-pip." var
