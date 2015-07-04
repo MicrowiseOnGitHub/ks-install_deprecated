@@ -22,13 +22,14 @@ cd ~
 git clone https://github.com/swiftstack/kinetic-swift.git
 export KS_SOURCE_DIR=~/kinetic-swift
 cd $KS_SOURCE_DIR
+git pull
 git submodule update --init
 read -p "Microwise: Downloaded kinetic-swift source." var
 
 sudo apt-get update
-sudo apt-get upgrade
+sudo apt-get -y upgrade
 
-sudo apt-get install ntp 
+sudo apt-get install -y ntp 
 
 cd $KS_INST_DIR
 
