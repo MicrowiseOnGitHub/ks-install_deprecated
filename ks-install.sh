@@ -72,8 +72,12 @@ read -p "Microwise: PyEClib installed." var
 
 #Install protobuf 3.0 . 默认安装是2.5，太low了，对于新的kinetic固件不支持
 cd $KS_INST_SOURCE_DIR
-tar -xf protobuf.tar
-cd protobuf
+tar -xf protobuf3.0.tar
+cp gmock-1.7.0.zip protobuf3.0/
+cd protobuf3.0
+unzip -q gmock-1.7.0.zip
+rm gmock-1.7.0.zip
+mv gmock-1.7.0 gmock
 ./autogen.sh
 ./configure
 make
@@ -117,7 +121,7 @@ git checkout stable/kilo
 sudo python setup.py develop
 #cd ../python-swiftclient/
 #sudo python setup.py install
-sudo apt-get install python-swiftclient
+sudo apt-get install -y python-swiftclient
 cd ../kinetic-py/
 git submodule init
 git submodule update
