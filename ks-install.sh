@@ -28,6 +28,7 @@ read -p "Microwise: Downloaded kinetic-swift source." var
 sudo apt-get update
 sudo apt-get upgrade
 
+sudo apt-get install ntp 
 
 cd $KS_INST_DIR
 
@@ -64,14 +65,27 @@ cd pyeclib
 sudo python setup.py install
 read -p "Microwise: PyEClib installed." var
 
-
+#Install protobuf 3.0 . 默认安装是2.5，太low了，对于新的kinetic固件不支持
+cd $KS_INST_SOURCE_DIR
+tar -xf protobuf.tar
+cd protobuf
+./autogen.sh
+./configure
+make
+make check
+make install
+read -p "Microwise: Installed protobuf 3.0." var
 
 #Install kinetic-java source
 #KS(kinetic-swift) need kinetic-java to communicate with kinetic devices 
 cd ~
-wget --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u45-b14/jdk-8u45-linux-x64.tar.gz
-tar -xf jdk-8u45-linux-x64.tar.gz
 export JAVA_HOME=~/jdk1.8.0_45
+if [ ! -d "$JAVA_HOME" ]; then   
+	if [ ! -f "~/jdk-8u45-linux-x64.tar.gz" ]; then
+		wget --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u45-b14/jdk-8u45-linux-x64.tar.gz
+	fi
+	tar -xf jdk-8u45-linux-x64.tar.gz
+fi
 read -p "Microwise: Installed jdk." var
 
 
