@@ -71,12 +71,12 @@ sudo python setup.py install
 read -p "Microwise: PyEClib installed." var
 
 #Install protobuf 3.0 . 默认安装是2.5，太low了，对于新的kinetic固件不支持
-cd $KS_INST_SOURCE_DIR
-tar -xf protobuf3.0.tar
-cp gmock-1.7.0.zip protobuf3.0/
-cd protobuf3.0
+cp $KS_INST_SOURCE_DIR/protobuf.3.0.tar $KS_INST_DIR
+cd $KS_INST_DIR
+tar -xf protobuf.3.0.tar
+cp $KS_INST_SOURCE_DIR/gmock-1.7.0.zip $KS_INST_DIR/protobuf/
+cd $KS_INST_DIR/protobuf/
 unzip -q gmock-1.7.0.zip
-rm gmock-1.7.0.zip
 mv gmock-1.7.0 gmock
 ./autogen.sh
 ./configure
