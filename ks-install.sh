@@ -19,6 +19,7 @@ exec 1> >( tools/outfilter.py -v -o "$KS_INST_DIR/ks-inst.log" ) 2>&1
 
 #Downloading kinetic-swift source
 cd ~
+sudo apt-get install -y git
 git clone https://github.com/swiftstack/kinetic-swift.git
 export KS_SOURCE_DIR=~/kinetic-swift
 cd $KS_SOURCE_DIR
@@ -139,6 +140,7 @@ fi
 sudo chmod 777 $SWIFT_DIR
 
 cd $SWIFT_DIR
+#$SWIFT_DIR/sdv is used to store container and account information, in a real enviornment, here should be real devices.
 if [ ! -d "sdv" ]; then
    sudo mkdir $SWIFT_DIR/sdv
 fi
@@ -197,6 +199,13 @@ read -p "Microwise: modified the .conf files." var
 
 
 #build the ring
+echo "Microwise: If you believe this is a real world, you should stop here."
+echo "Because the following is not real!"
+read -p "Continue? [Y/N]" var
+if [ $var = 'N' ]; then
+   exit
+fi
+
 cd /etc/swift
 swift-ring-builder account.builder create 10 1 1
 swift-ring-builder account.builder add --region 1 --zone 1 --ip 127.0.0.1 --port 6002 --device sdv --weight 1
