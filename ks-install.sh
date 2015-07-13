@@ -50,7 +50,7 @@ sudo apt-get install -y build-essential   #尽管上一步会安装gcc等安装�
 sudo apt-get install -y libffi-dev
 sudo apt-get install -y protobuf-compiler
 sudo apt-get install -y memcached
-
+sudo apt-get install -y unzip
 read -p "Microwise: Prerequisites." var
 
 
