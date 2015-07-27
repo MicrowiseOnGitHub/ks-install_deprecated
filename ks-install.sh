@@ -109,9 +109,6 @@ cd kinetic-java
 mvn clean package
 read -p "Microwise: Installed kinetic-java." var
 
-cd bin
-screen -dmS kinjava ./startSimulator.sh
-read -p "Microwise: a simulator is launched." var
 
 
 #Installing from source
@@ -123,12 +120,12 @@ sudo python setup.py develop
 #cd ../python-swiftclient/
 #sudo python setup.py install
 sudo apt-get install -y python-swiftclient
-cd ../kinetic-py/
-git submodule init
-git submodule update
-sudo sh compile_proto.sh 
-sudo python setup.py develop
-cd ..
+#cd ../kinetic-py/
+#git submodule init
+#git submodule update
+#sudo sh compile_proto.sh 
+#sudo python setup.py develop
+#cd ..
 read -p "Microwise: Installing from source." var
 
 
@@ -198,13 +195,6 @@ iniset /etc/swift/proxy-server.conf DEFAULT account_autocreate true
 read -p "Microwise: modified the .conf files." var
 
 
-#build the ring
-echo "Microwise: If you believe this is a real world, you should stop here."
-echo "Because the following is not real!"
-read -p "Continue? [Y/N]" var
-if [ $var = 'N' ]; then
-   exit
-fi
 
 cd /etc/swift
 swift-ring-builder account.builder create 10 1 1
@@ -214,6 +204,18 @@ swift-ring-builder account.builder rebalance
 swift-ring-builder container.builder create 10 1 1
 swift-ring-builder container.builder add --region 1 --zone 1 --ip 127.0.0.1 --port 6001 --device sdv --weight 1
 swift-ring-builder container.builder rebalance
+
+#build the ring
+echo "Microwise: If you believe this is a real world, you should stop here."
+echo "Because the following is not real!"
+read -p "Continue? [Y/N]" var
+if [ $var = 'N' ]; then
+   exit
+fi
+
+cd bin
+screen -dmS kinjava ./startSimulator.sh
+read -p "Microwise: a simulator is launched." var
 
 swift-ring-builder object.builder create 10 1 1
 swift-ring-builder object.builder add --region 1 --zone 1 --ip 127.0.0.1 --port 6000 --device 127.0.0.1:8123 --weight 1
