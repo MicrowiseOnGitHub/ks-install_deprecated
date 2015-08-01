@@ -114,9 +114,10 @@ read -p "Microwise: Installed kinetic-java." var
 #Installing from source
 cd ~/kinetic-swift
 sudo python setup.py develop
-cd swift
-git checkout stable/kilo
-sudo python setup.py develop
+sudo apt-get install -y swift swift-proxy swift-account swift-container swift-object
+#cd swift
+#git checkout stable/kilo
+#sudo python setup.py develop
 #cd ../python-swiftclient/
 #sudo python setup.py install
 sudo apt-get install -y python-swiftclient
